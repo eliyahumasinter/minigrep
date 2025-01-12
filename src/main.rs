@@ -1,13 +1,28 @@
 use std::{env, fs};
 
-
 fn main() {
     let args: Vec<String> = env::args().collect(); //First element is executable file path
-    let query = &args[1];
-    let file_path = &args[2];
-    println!("Searching for query {query} in file {file_path}");
+    let config = Config::new(&args);
 
-    let contents =  fs::read_to_string(&file_path).expect("Should have been able to read the file");
+    println!(
+        "Searching for query {} in file {}",
+        config.query, config.file_path
+    );
+
+    let contents =
+        fs::read_to_string(config.file_path).expect("Should have been able to read the file");
     println!("With text\n{contents}")
+}
 
+struct Config {
+    query: String,
+    file_path: String,
+}
+
+impl Config {
+    fn new(args: &[String]) -> Config {
+        let query = args[1].clone();
+        let file_path = args[2].clone();
+        Config { query, file_path }
+    }
 }
